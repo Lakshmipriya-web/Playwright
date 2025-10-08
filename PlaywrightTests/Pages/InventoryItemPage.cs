@@ -20,8 +20,6 @@ namespace PlaywrightTests.Pages
         {
             await UIActions.Click(_page, _shoppingCartLink);
             return new CartPage(_page);
-       }
+        }
     }
-       
-        
 }

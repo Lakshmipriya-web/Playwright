@@ -11,7 +11,6 @@ namespace PlaywrightTests.Tests.Base
 {
     public class BaseTest
     {
-
         protected IPlaywright _playwright;
         protected IBrowser _browser;
         protected IPage _page;
@@ -56,7 +55,7 @@ namespace PlaywrightTests.Tests.Base
             {
                 ReportManager.Log(Status.Fail, TestContext.CurrentContext.Result.Message);
                 ReportManager.Log(Status.Fail, TestContext.CurrentContext.Result.Message);
-                // ✅ This means the test failed
+                // This means the test failed
                 await ScreenshotHelper.CaptureAsync(_page, context.Test.Name);
 
                 Console.WriteLine($"Test FAILED: {context.Test.Name}");
@@ -67,7 +66,6 @@ namespace PlaywrightTests.Tests.Base
                 ReportManager.Log(Status.Pass, "Test passed");
                 Console.WriteLine($"Test PASSED: {context.Test.Name}");
             }
-
             // Close only the page, not the browser
             await _page.CloseAsync();
         }
@@ -77,7 +75,6 @@ namespace PlaywrightTests.Tests.Base
         {
             // Flush ExtentReports
             ReportManager.Flush();
-
             // Close browser and dispose Playwright
             if (_browser != null)
                 await _browser.CloseAsync();

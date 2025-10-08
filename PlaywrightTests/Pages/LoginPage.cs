@@ -36,17 +36,5 @@ namespace PlaywrightTests.Pages
             await ClickLogin();
             return new InventoryPage(_page);
         }
-
-        // public static async Task LoginAsync(IPage page)
-    // {
-    //     LoginPage loginPage = new(page);
-    //     await loginPage.NavigateAsync();
-    //     await loginPage.LoginAs("standard_user", "secret_sauce");
-    //     // await page.GotoAsync("https://www.saucedemo.com/");
-    //     // await page.FillAsync(LoginPage._usernameField, "standard_user");
-    //     // await page.FillAsync(LoginPage._passwordField, "secret_sauce");
-    //     // await page.ClickAsync(LoginPage._loginButton);
-    //     Assert.AreEqual(await page.TitleAsync(), "Swag Labs");
-    // }
     }
 }
