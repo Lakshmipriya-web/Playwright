@@ -1,0 +1,8 @@
+{
+  "baseUrl": "https://www.saucedemo.com/",
+  "browser": "chromium",
+  "headless": true,
+  "timeout": 30000,
+  "username": "standard_user",
+  "password": "secret_sauce"
+}
