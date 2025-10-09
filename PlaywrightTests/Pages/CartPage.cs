@@ -7,8 +7,8 @@ namespace PlaywrightTests.Pages
     {
         public readonly IPage _page = page;
 
-        public static readonly string _continueShoppingButton = "#continue-shopping";
         public static readonly string _checkoutButton = "#checkout";
+        public static readonly string _continueShoppingButton = "#continue-shopping";
 
         public async Task<InventoryPage> ClickOnContinueShopping()
         {

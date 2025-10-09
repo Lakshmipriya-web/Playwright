@@ -6,12 +6,12 @@ namespace PlaywrightTests.Pages
     public class LoginPage(IPage page) : BasePage(page)
     {
         private readonly IPage _page = page;
-        // Locators as private fields
-        public static readonly string _usernameField = "#user-name";
-        public static readonly string _passwordField = "#password";
+        
         public static readonly string _loginButton = "#login-button";
+        public static readonly string _passwordField = "#password";
+        public static readonly string _usernameField = "#user-name";
 
-        public async Task open(string url)
+        public async Task Open(string url)
         {
             await NavigateAsync(url);
         }
@@ -25,16 +25,24 @@ namespace PlaywrightTests.Pages
         {
             await UIActions.FillText(_page, _passwordField, password);
         }
+
         public async Task ClickLogin()
         {
             await UIActions.Click(_page, _loginButton);
         }
-        public async Task<InventoryPage> LoginAs(string username, string password)
+        
+        public async Task<BasePage> LoginAs(string username, string password)
         {
             await EnterUsername(username);
             await EnterPassword(password);
             await ClickLogin();
-            return new InventoryPage(_page);
+            // Check if login succeeded by verifying an element on Inventory page
+            bool loginSuccess = _page.Url.Contains("/inventory.html");
+
+            if (loginSuccess)
+                return new InventoryPage(_page);
+            else
+                return new LoginPage(_page); // login failed, stay on LoginPage
         }
     }
 }

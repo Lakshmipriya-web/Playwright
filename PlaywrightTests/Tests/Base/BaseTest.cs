@@ -14,34 +14,31 @@ namespace PlaywrightTests.Tests.Base
         protected IPlaywright _playwright;
         protected IBrowser _browser;
         protected IPage _page;
-        private Config.Config _config;
+        protected TestConfig _config;
         protected InventoryPage _inventoryPage;
+        protected string _baseUrl;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
             // Initialize Extent Reports once for all tests
             ReportManager.InitReport();
+            // Load environment-specific config (Dev/QA etc.)
+            _config = ConfigReader.LoadConfig();
             //create connection
             _playwright = await DriverManager.GetInstance();
-            // using var playwright = await Playwright.CreateAsync();
-            _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false
-            });
+            // Launch browser based on config or environment variable
+            _browser = await DriverManager.GetBrowserAsync(_config);
         }
 
         [SetUp]
         public async Task Setup()
         {
-            _config = ConfigReader.LoadConfig();
-
-            _page = await _browser.NewPageAsync();
-
-            LoginPage loginPage = new LoginPage(_page);
-            await loginPage.open(_config.baseUrl);
-            _inventoryPage = await loginPage.LoginAs(_config.username, _config.password);
-
+            // Create a fresh context + page for each test
+            var context = await _browser.NewContextAsync();
+            _page = await context.NewPageAsync();
+            // Initialize global base URL
+            _baseUrl = UrlHelper.GetBaseUrlAsync(_config);
             // Create ExtentTest node for current test
             ReportManager.CreateTest(TestContext.CurrentContext.Test.Name);
         }
@@ -54,17 +51,15 @@ namespace PlaywrightTests.Tests.Base
             if (context.Result.Outcome.Status == TestStatus.Failed)
             {
                 ReportManager.Log(Status.Fail, TestContext.CurrentContext.Result.Message);
-                ReportManager.Log(Status.Fail, TestContext.CurrentContext.Result.Message);
                 // This means the test failed
                 await ScreenshotHelper.CaptureAsync(_page, context.Test.Name);
-
-                Console.WriteLine($"Test FAILED: {context.Test.Name}");
-                Console.WriteLine($"Reason: {context.Result.Message}");
+                Utils.Logger.Error($"Test FAILED: {context.Test.Name}");
+                Utils.Logger.Error($"Reason: {context.Result.Message}");
             }
             else if (context.Result.Outcome.Status == TestStatus.Passed)
             {
                 ReportManager.Log(Status.Pass, "Test passed");
-                Console.WriteLine($"Test PASSED: {context.Test.Name}");
+                Utils.Logger.Info($"Test PASSED: {context.Test.Name}");
             }
             // Close only the page, not the browser
             await _page.CloseAsync();

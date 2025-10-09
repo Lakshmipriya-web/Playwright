@@ -1,9 +1,10 @@
 using Microsoft.Playwright;
+
 namespace PlaywrightTests.Pages
 {
     public abstract class BasePage
     {
-        private readonly IPage _page;
+        protected readonly IPage _page;
 
         public BasePage(IPage page)
         {

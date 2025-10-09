@@ -4,10 +4,14 @@ namespace PlaywrightTests.Config
 {
     public static class ConfigReader
     {
-        public static Config LoadConfig(string path = "Config/config.json")
+        public static TestConfig LoadConfig(string fileName = "config.json")
         {
-            var json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<Config>(json);
+            var basePath = AppContext.BaseDirectory;
+            var configPath = Path.Combine(basePath, "Config", fileName);
+            if (!File.Exists(configPath))
+                throw new FileNotFoundException($"Config file not found: {configPath}");
+            var json = File.ReadAllText(configPath);
+            return JsonConvert.DeserializeObject<TestConfig>(json);
         }
     }
 }
