@@ -8,6 +8,9 @@ namespace PlaywrightTests.Tests;
 public class Tests : BaseTest
 {
     [Test]
+    [Category("Smoke"), Category("Regression")]
+    [Property("TestCaseId", "TC_Login_001")]
+    [Property("TestCaseId", "TC_Login_002")]
     public async Task VerifyLoginTitle_Test()
     {
         LoginPage loginPage = new LoginPage(_page);

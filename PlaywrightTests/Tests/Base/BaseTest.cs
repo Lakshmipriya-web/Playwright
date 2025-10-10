@@ -40,7 +40,24 @@ namespace PlaywrightTests.Tests.Base
             // Initialize global base URL
             _baseUrl = UrlHelper.GetBaseUrlAsync(_config);
             // Create ExtentTest node for current test
-            ReportManager.CreateTest(TestContext.CurrentContext.Test.Name);
+            var extentTest = ReportManager.CreateTest(TestContext.CurrentContext.Test.Name);
+            var test = TestContext.CurrentContext.Test;
+            // Assign all categories
+            if (test.Properties.ContainsKey("Category"))
+            {
+                foreach (var category in test.Properties["Category"])
+                    extentTest.AssignCategory(category.ToString());
+            }
+
+            // Assign all TestCase IDs
+            if (test.Properties.ContainsKey("TestCaseId"))
+            {
+                foreach (var tcid in test.Properties["TestCaseId"])
+                {
+                    extentTest.AssignAuthor($"TCID: {tcid}");
+                    ReportManager.Log(Status.Info, $"Linked TestCase ID: {tcid}");
+                }
+            }
         }
 
         [TearDown]
